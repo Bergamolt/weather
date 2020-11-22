@@ -92,9 +92,9 @@ if (localStorage.getItem('location') !== null) {
     currentWeather(city, keyAPI);
 }
 
-function currentWeather(city, key) {
-
-    fetch(`https://community-open-weather-map.p.rapidapi.com/weather?q=${city}&lang=ru&units=metric`, {
+async function currentWeather(city, key) {
+    
+    await fetch(`https://community-open-weather-map.p.rapidapi.com/weather?q=${city}&lang=ru&units=metric`, {
         "method": "GET",
         "headers": {
             "x-rapidapi-key": key,
@@ -113,7 +113,7 @@ function currentWeather(city, key) {
         })
         .catch(error => console.error(error));
 
-    fetch(`https://community-open-weather-map.p.rapidapi.com/forecast/daily?q=${city}&cnt=7&units=metric`, {
+    await fetch(`https://community-open-weather-map.p.rapidapi.com/forecast/daily?q=${city}&cnt=7&units=metric`, {
         "method": "GET",
         "headers": {
             "x-rapidapi-key": key,
@@ -129,6 +129,7 @@ function currentWeather(city, key) {
             }
         })
         .catch(error => console.error(error));
+    document.querySelector('.forecast-container').style.opacity = 1;
 }
 
 const addWeatherInWeek = (data) => {
@@ -158,10 +159,9 @@ const addWeatherInWeek = (data) => {
 };
 
 const addWeatherCurrent = (data, city) => {
-
+    console.log(data)
     document.querySelector('#location').textContent = city;
     document.querySelector('#descriptionWeather').textContent = (data.weather[0]['description'])
-        .split('').reduce((c, b, i) => i === 1 ? c.toUpperCase() : c + b);
     document.querySelector('#windSpeed').innerHTML = `
             <img src="images/icon-wind.png" alt="">${data.wind.speed}м/cек
         `;

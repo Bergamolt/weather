@@ -1788,6 +1788,7 @@ form input[type="reset"] {
 
 .forecast-container {
   width: 100%;
+  opacity: 0;
   background: #323544;
   display: table;
   table-layout: fixed;
@@ -1796,6 +1797,7 @@ form input[type="reset"] {
   border-radius: 10px;
   margin-top: -150px;
   margin-bottom: 50px;
+  transition: opacity 0.2s linear;
 }
 
 .forecast-container .forecast {
@@ -2436,12 +2438,24 @@ form input[type="reset"] {
   color: white;
 }
 
+
+
 .day {
   overflow: hidden;
 }
 
 .description {
   margin-bottom: 10px;
+}
+
+.description::first-letter {
+  text-transform: uppercase;
+}
+
+@media screen and (max-width: 768px) {
+  .site-header {
+    padding: 25px 0;
+  }
 }
 
 @media screen and (max-width: 680px) {
