@@ -378,6 +378,12 @@ form input[type="reset"] {
   }
 }
 
+.feels-like {
+  font-weight: 500;
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
 .container-fluid {
   margin-right: auto;
   margin-left: auto;
@@ -2428,4 +2434,42 @@ form input[type="reset"] {
 .site-footer .social-links a:hover {
   background: #009ad8;
   color: white;
+}
+
+.day {
+  overflow: hidden;
+}
+
+.description {
+  margin-bottom: 10px;
+}
+
+@media screen and (max-width: 680px) {
+  .forecast-container {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .forecast-container .forecast {
+    width: 33.333%;
+  }
+}
+
+@media screen and (max-width: 395px) {
+  .degree:first-child {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .find-location input[type="submit"] {
+    padding: 0 25px;
+  }
+  .find-location input[type="text"] {
+    font-size: 12px;
+  }
+  .forecast-container .forecast.today .degree .num {
+    font-size: 4.5rem;
+  }
+  .forecast-icon img {
+    width: 70px;
+  }
 }

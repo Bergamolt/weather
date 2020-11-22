@@ -2,7 +2,7 @@
 
 const keyAPI = "7a8744f3c3msh650ff5fb9561771p1114d9jsncd0d29ea95ad";
 let cityName = '';
-
+const month = new Date().getMonth();
 const searchWeather = document.querySelector('#searchWeather');
 const days = document.querySelectorAll('.day');
 
@@ -47,17 +47,23 @@ const backgroundImages = {
 };
 
 const randomNum = Math.floor(Math.random() * (4 - 0) + 0);
-console.log(randomNum);
-document.querySelector('.hero').style.backgroundImage = `url(${backgroundImages
-    .fall[randomNum]})`;
+
+if (month === 11 && month <= 1) {
+    document.querySelector('.hero').style.backgroundImage = `url(${backgroundImages
+        .winter[randomNum]})`;
+} else if (month > 1 && month <= 4) {
+    document.querySelector('.hero').style.backgroundImage = `url(${backgroundImages
+        .spring[randomNum]})`;
+} else if (month > 4 && month <= 7) {
+    document.querySelector('.hero').style.backgroundImage = `url(${backgroundImages
+        .summer[randomNum]})`;
+} else {
+    document.querySelector('.hero').style.backgroundImage = `url(${backgroundImages
+        .fall[randomNum]})`;
+}
 
 const getDayWeek = () => {
     const day = new Date().getDay();
-    const date = new Date().toLocaleDateString('ru', {
-        day: 'numeric',
-        month: 'long',
-    });
-
     const dayWeek = [
         "Воскресенье",
         "Понедельник",
@@ -69,12 +75,14 @@ const getDayWeek = () => {
     ];
 
     const newDayWeek = [...dayWeek.slice(day), ...dayWeek.splice(0, day)];
-
     days.forEach((day, i) => {
         day.textContent = newDayWeek[i];
     });
-    document.querySelector('.date').textContent = date;
 
+    document.querySelector('.date').textContent = new Date().toLocaleDateString('ru', {
+        day: 'numeric',
+        month: 'long',
+    });
 };
 
 getDayWeek();
@@ -85,7 +93,7 @@ if (localStorage.getItem('location') !== null) {
 }
 
 function currentWeather(city, key) {
-    console.log(city);
+
     fetch(`https://community-open-weather-map.p.rapidapi.com/weather?q=${city}&lang=ru&units=metric`, {
         "method": "GET",
         "headers": {
@@ -103,7 +111,7 @@ function currentWeather(city, key) {
                 localStorage.setItem('location', city);
             }
         })
-        .catch(error => console.error(error))
+        .catch(error => console.error(error));
 
     fetch(`https://community-open-weather-map.p.rapidapi.com/forecast/daily?q=${city}&cnt=7&units=metric`, {
         "method": "GET",
@@ -117,10 +125,10 @@ function currentWeather(city, key) {
             if (data.cod === '404') {
                 return;
             } else {
-                addWeatherInWeek(data)
+                addWeatherInWeek(data);
             }
         })
-        .catch(error => console.error(error))
+        .catch(error => console.error(error));
 }
 
 const addWeatherInWeek = (data) => {
@@ -129,11 +137,13 @@ const addWeatherInWeek = (data) => {
          `<img src="images/icon-umberella.png" alt="">${data.list[0].pop * 100}%`;
 
     const maxTempDay = document.querySelectorAll('#maxtemp');
+
     maxTempDay.forEach((day, i) => {
         day.innerHTML = Math.round(data.list[i++].temp.max) + '<sup>o</sup>C';
     });
 
     const minTempDay = document.querySelectorAll('#mintemp');
+
     minTempDay.forEach((day, i) => {
         day.innerHTML = Math.round(data.list[i++].temp.min) + '<sup>o</sup>C';
     });
@@ -144,25 +154,26 @@ const addWeatherInWeek = (data) => {
         if (i > 0) {
             icon.src = iconsWeather[data.list[i].weather[0].icon];
         }
-    })
+    });
 };
 
 const addWeatherCurrent = (data, city) => {
-    document.querySelector('#location').textContent = city;
 
+    document.querySelector('#location').textContent = city;
+    document.querySelector('#descriptionWeather').textContent = (data.weather[0]['description'])
+        .split('').reduce((c, b, i) => i === 1 ? c.toUpperCase() : c + b);
     document.querySelector('#windSpeed').innerHTML = `
             <img src="images/icon-wind.png" alt="">${data.wind.speed}м/cек
         `;
     document.querySelector('#temp').innerHTML = Math.round(data.main.temp) + '<sup>o</sup>C';
-    console.log(data.weather[0].icon)
-    document.querySelector('#icon').src = iconsWeather[data.weather[0].icon];
+    document.querySelector('#icon').src = iconsWeather[(data.weather[0].icon).replace('n', 'd')];
+    document.querySelector('#feelsLike').innerHTML = Math.round(data.main['feels_like']) + '<sup>o</sup>C'
 };
 
 
 
 searchWeather.addEventListener('submit', (e) => {
     e.preventDefault();
-
     cityName = document.querySelector('#nameCity').value;
     currentWeather(cityName, keyAPI);
     document.querySelector('#nameCity').value = '';
